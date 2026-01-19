@@ -1,0 +1,44 @@
+# Copyright 2025 dah4k
+# SPDX-License-Identifier: EPL-2.0
+
+FROM opensuse/leap:16.0
+
+## Restore man-pages and other documentation
+RUN sed -i 's/^rpm.install.excludedocs.*/rpm.install.excludedocs = no/' /etc/zypp/zypp.conf
+
+## Install build requirements
+RUN zypper --quiet --non-interactive refresh \
+ && zypper --quiet --non-interactive install --no-recommends \
+        ## Build requirements \
+        git \
+        make \
+        python313 \
+        python313-uv \
+        ## Other devel tools \
+        dust \
+        fd \
+        file \
+        jq \
+        man \
+        man-pages \
+        man-pages-posix \
+        ripgrep \
+        vim \
+        vim-data \
+        xz \
+ && zypper --quiet --non-interactive clean
+
+## Create user
+ARG USERNAME=e33
+RUN groupadd --gid 1000 ${USERNAME} \
+ && useradd --create-home --home-dir /home/${USERNAME} --uid 1000 --gid 1000 ${USERNAME}
+
+USER ${USERNAME}
+
+WORKDIR /home/e33
+
+## FIXME: CART requires Python 3.11?
+##  $ uv venv --python 3.11
+##  $ uv pip install cart
+##  $ . .venv/bin/activate
+
