@@ -37,8 +37,9 @@ USER ${USERNAME}
 
 WORKDIR /home/e33
 
-## FIXME: CART requires Python 3.11?
-##  $ uv venv --python 3.11
-##  $ uv pip install cart
-##  $ . .venv/bin/activate
-
+## Install CART in Python-3.12 virtual env
+RUN uv venv --python 3.12
+ENV SAVED_PATH="$PATH"
+ENV PATH="/home/e33/.venv/bin:$PATH"
+RUN uv pip install cart
+#ENV PATH="${SAVED_PATH}"
