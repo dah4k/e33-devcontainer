@@ -35,11 +35,8 @@ RUN groupadd --gid 1000 ${USERNAME} \
 
 USER ${USERNAME}
 
-WORKDIR /home/e33
+WORKDIR /home/${USERNAME}
 
 ## Install CART in Python-3.12 virtual env
 RUN uv venv --python 3.12
-ENV SAVED_PATH="$PATH"
-ENV PATH="/home/e33/.venv/bin:$PATH"
-RUN uv pip install cart
-#ENV PATH="${SAVED_PATH}"
+RUN source /home/${USERNAME}/.venv/bin/activate && uv pip install cart
